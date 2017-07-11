@@ -1,4 +1,4 @@
-# Search password protected files
+### Search password protected files
 
 1. Check if xls file is password protected  
 ```
