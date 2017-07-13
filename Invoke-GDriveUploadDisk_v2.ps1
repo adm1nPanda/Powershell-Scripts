@@ -61,8 +61,8 @@ $WebRequest1.ContentType = "application/octet-stream";
 $WebRequest1.Headers.add('Authorization',$authorization);
 
 
-$FileReader = New-Object System.IO.StreamReader $SourceFilePath;
-$RequestWriter1 = [System.IO.StreamWriter] $WebRequest1.GetRequestStream();
+$FileReader = New-Object System.IO.StreamReader ($SourceFilePath, [System.Text.Encoding]::Default);
+$RequestWriter1 = New-Object System.IO.StreamWriter ($WebRequest1.GetRequestStream(), [System.Text.Encoding]::Default);
 $RequestWriter1.Write($FileReader.ReadToEnd());
 $RequestWriter1.Close();
 
