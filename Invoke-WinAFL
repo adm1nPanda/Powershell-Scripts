@@ -84,6 +84,6 @@ foreach ($i in 1..$NumberOfCores){
 	}
 	$command = $command + " -nargs $nargs -- $FuzzApplication @@"
 
-	cmd /c $command $PathtoWinAFL
+	cmd /c $command
 	
 }
