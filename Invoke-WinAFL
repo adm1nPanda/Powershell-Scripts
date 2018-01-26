@@ -32,7 +32,7 @@ WinAFL Parameter - target_method or target_offset.
 WinAFL Parameter - nargs.
 
 .PARAMETER NumberofCores
-Number of CPU cores to assign to the fuzzer.
+Number of CPU cores to assign to the fuzzer. [Atleast one core]
 
 #>
 
@@ -65,9 +65,16 @@ foreach ($i in 1..$NumberOfCores){
 	$x = $x * 10
 
 	$command = "start /affinity $core"
-	$command = $command + " afl-fuzz.exe -i $FuzzInput -o $FuzzOutput -D $DynamoRIODir -t 100000 -- -covtype edge -fuzz_iterations 50"
+	$command = $command + " afl-fuzz.exe -i $FuzzInput -o $FuzzOutput -D $DynamoRIODir -t 100000"
 
-	$command = $command + " -coverage_module $CoverageModule -target_module $TargetModule"
+	if ($i -like 1){
+		$command = $command + " -M Fuzzer$i"
+	}
+	else{
+		$command = $command + " -S Fuzzer$i"
+	}
+
+	$command = $command + " -- -covtype edge -fuzz_iterations 50 -coverage_module $CoverageModule -target_module $TargetModule"
 	
 	if ($TargetMethodOrOffset -like '0x*'){
 		$command = $command + " -target_offset $TargetMethodOrOffset"
