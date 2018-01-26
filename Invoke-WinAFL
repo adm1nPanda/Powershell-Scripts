@@ -25,8 +25,8 @@ WinAFL Parameter - coverage_module.
 .PARAMETER TargetModule
 WinAFL Parameter - target_module.
 
-.PARAMETER TargetMethod
-WinAFL Parameter - target_method.
+.PARAMETER TargetMethodOrOffset
+WinAFL Parameter - target_method or target_offset.
 
 .PARAMETER nargs
 WinAFL Parameter - nargs.
@@ -50,7 +50,7 @@ Param(
     [Parameter(Mandatory=$true)]
     [string]$CoverageModule,
     [Parameter(Mandatory=$true)]
-    [string]$TargetMethod,
+    [string]$TargetMethodOrOffset,
     [Parameter(Mandatory=$true)]
     [string]$nargs,
     [Parameter(Mandatory=$true)]
@@ -68,8 +68,14 @@ foreach ($i in 1..$NumberOfCores){
 	$command = $command + " afl-fuzz.exe -i $FuzzInput -o $FuzzOutput -D $DynamoRIODir -t 100000 -- -covtype edge -fuzz_iterations 50"
 
 	$command = $command + " -coverage_module $CoverageModule -target_module $TargetModule"
-		
-	$command = $command + " -target_method $TargetMethod -nargs $nargs -- $FuzzApplication @@"
+	
+	if ($TargetMethodOrOffset -like '0x*'){
+		$command = $command + " -target_offset $TargetMethodOrOffset"
+	}
+	else{
+		$command = $command + " -target_method $TargetMethodOrOffset"
+	}
+	$command = $command + " -nargs $nargs -- $FuzzApplication @@"
 
 	cmd /c $command $PathtoWinAFL
 	
